@@ -1,0 +1,16 @@
+<package>
+  <description brief="plataforma_movil_con_arduino">
+
+     plataforma_movil_con_arduino
+
+  </description>
+  <author>youbot</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/plataforma_movil_con_arduino</url>
+  <depend package="roscpp"/>
+  <depend package="sensor_msgs"/>
+
+</package>
+
+
