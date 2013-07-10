@@ -44,7 +44,7 @@ int main(int argc, char** argv) {
 	ros::Rate r(1); // 1 hz
 	while (myNodeHandle->ok()) {
 
-		processPtuComm();
+		//processPtuComm();
 		ros::spinOnce();
 	}
 
@@ -55,8 +55,10 @@ int main(int argc, char** argv) {
 
 void getVelCommand(int inVelLineal, int inVelAngular, char* inComando) {
 
+	int i;
+	char zero = '0';
 
-	ROS_INFO("Lin: %d. Ang: %d", inVelLineal, inVelAngular);
+	//ROS_INFO("Lin: %d. Ang: %d", inVelLineal, inVelAngular);
 	inComando[0] = 'A';
 	inComando[1] = (unsigned char)((inVelLineal&0xFF00) >> 8);
 	inComando[2] = (unsigned char)(inVelLineal&0x00FF);
@@ -65,6 +67,13 @@ void getVelCommand(int inVelLineal, int inVelAngular, char* inComando) {
 	inComando[5] = 'Z';
 	inComando[6] = 'Z';
 	inComando[7] = 0;
+
+	// Los ceros no llegan a través del cable USB a TTL (investigar motivo, de momemto reemplazar)
+	for(i=1;i<=4;i++) {
+		if (inComando[i] == 0) {
+			inComando[i] = zero;
+		}
+	}
 
 }
 
@@ -78,25 +87,21 @@ void joyCallback(const sensor_msgs::Joy& inJoyCommand) {
 
 	printf("Recibido comando joystick (%g,%g)\n",theAxesV,theAxesH);
 
-	int theLinVel = theAxesV * 626;
+	int theLinVel = -theAxesV * 626;
 	int theAngVel = theAxesH * 448;
 
-	if (theLinVel > 0) {
-		theAngVel = theAngVel / 4;
+	if (theLinVel != 0) {
+		theAngVel = -theAngVel / 4;
 	}
-
-	theLinVel++;
-	theAngVel++;
-	// Interpretar los comandos de Joystick como instrucciones
 
 	getVelCommand(theLinVel,theAngVel,theCommand);
 
 	//do {
 		Ptu->send(theCommand,7);
-	//	ros::Duration(0.1).sleep();
+	//
 	//} while (!processPtuComm());
 
-
+	ros::Duration(0.1).sleep();
 
 	processPtuComm();
 
