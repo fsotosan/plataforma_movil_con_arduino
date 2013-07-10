@@ -208,7 +208,7 @@ namespace Serial {
 	int Serial::send(const char* inBytes,int inNumBytes) {
 		int theBytesSent;
 		theBytesSent = write(this->myHandler,inBytes, inNumBytes);
-		cout << "Serial::send. Enviados " << theBytesSent << " bytes" << endl;
+		//cout << "Serial::send. Enviados " << theBytesSent << " bytes" << endl;
 		return theBytesSent;
 	}
 

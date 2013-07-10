@@ -44,6 +44,7 @@ int main(int argc, char** argv) {
 	ros::Rate r(1); // 1 hz
 	while (myNodeHandle->ok()) {
 
+		processPtuComm();
 		ros::spinOnce();
 	}
 
@@ -91,7 +92,7 @@ void joyCallback(const sensor_msgs::Joy& inJoyCommand) {
 	getVelCommand(theLinVel,theAngVel,theCommand);
 
 	//do {
-		Ptu->send(theCommand,8);
+		Ptu->send(theCommand,7);
 	//	ros::Duration(0.1).sleep();
 	//} while (!processPtuComm());
 
